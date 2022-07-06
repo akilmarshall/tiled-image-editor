@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.js": "/tiled-image-editor/static/js/main.5acd592c.js",
+    "static/js/787.fb5c3cd0.chunk.js": "/tiled-image-editor/static/js/787.fb5c3cd0.chunk.js",
+    "index.html": "/tiled-image-editor/index.html",
+    "main.5acd592c.js.map": "/tiled-image-editor/static/js/main.5acd592c.js.map",
+    "787.fb5c3cd0.chunk.js.map": "/tiled-image-editor/static/js/787.fb5c3cd0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.5acd592c.js"
+  ]
+}

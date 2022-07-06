@@ -13,7 +13,7 @@ function App() {
         if (activePage === "home") {
             return <Home />
         } else if (activePage === "editor") {
-            return <Editor columns={20} rows={20} />
+            return <Editor columns={40} rows={20} />
         } else if (activePage === "settings") {
             return <Settings />
         }

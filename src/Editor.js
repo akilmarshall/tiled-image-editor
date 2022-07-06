@@ -6,64 +6,40 @@ import {
     Divider,
     Box, 
     Center,
+    Button,
 } from '@chakra-ui/react'
+import TileSheet, { tileset } from './Tilesheet'
 
-const tileset = [
-    'https://imgur.com/RnKhzek.png',
-    'https://imgur.com/foYmhmC.png',
-    'https://imgur.com/Q60zv9w.png',
-    'https://imgur.com/00WU7xX.png',
-    'https://imgur.com/b9z7yE1.png',
-    'https://imgur.com/Tjc33Vn.png'
-]
-
-function TileSheet({selected}) {
-    const [current, setSelected] = useState(selected)
-
-    function renderTile(i) {
-        const img = tileset[i]
-        const color = current === i ? "yellow" : "white"
-        return (
-            <Box
-                height={'20px'}
-                width={'20px'}
-                bg={color}
-                onClick={() => setSelected(i)}
-            >        
-                <Center>
-                    <Image id={i} src={img} />
-                </Center>
-            </Box>
-        )
-    }
-    return (
-        <HStack>
-            {tileset.map((_, n) => renderTile(n))}
-        </HStack>
-    )
-}
 
 function Editor(props) {
     const {columns, rows} = props
 
     let image = []
-    for (let i = 0; i < columns; i++) {
+    for (let y = 0; y < rows; y++) {
         let row = []
-        for (let j = 0; j < rows; j++ ) {
-            row.push((i + j) % 6)
+        for (let x = 0; x < columns; x++) {
+            row.push([x, y, 1])  // [x, y, data]
         }
         image.push(row)
+    }
+
+    function updateImage(x, y) {
+        // update image[x][y] to the currently selected tile in the tile sheet
+        // TODO use the currently selected tile instead of always 0
+        // image[x][y] = 0
+        console.log('update image at ', x, y)
     }
 
     function renderRow(row) {
         return (
         <HStack spacing='0px'>
-            {row.map(i => <Image src={tile(i)}/>)}
+            {row.map(([x, y, i]) => <Image src={tile(i)} onClick={() => {updateImage(x, y)}} />)}
         </HStack>
         )
     }
 
     function renderImage() {
+        console.log('render')
         return (
         <>
             {image.map(renderRow)}
@@ -79,6 +55,7 @@ function Editor(props) {
         </div>
         <Divider />
         <TileSheet selected={0} />
+        <Button onClick={() => {updateImage(0, 0)}}>Debug</Button>
     </>
     )
 }

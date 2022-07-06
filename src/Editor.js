@@ -7,12 +7,16 @@ import {
     Box, 
     Center,
     Button,
+    Text,
 } from '@chakra-ui/react'
 import TileSheet, { tileset } from './Tilesheet'
+import { useSelector } from 'react-redux'
 
 
 function Editor(props) {
-    const {columns, rows} = props
+    const {_columns, rows} = props
+
+    const columns = useSelector(state => state.settings.columns)
 
     let image = []
     for (let y = 0; y < rows; y++) {
@@ -27,14 +31,15 @@ function Editor(props) {
         // update image[x][y] to the currently selected tile in the tile sheet
         // TODO use the currently selected tile instead of always 0
         // image[x][y] = 0
-        console.log('update image at ', x, y)
     }
 
     function renderRow(row) {
         return (
-        <HStack spacing='0px'>
-            {row.map(([x, y, i]) => <Image src={tile(i)} onClick={() => {updateImage(x, y)}} />)}
-        </HStack>
+        <>
+            <HStack spacing='0px'>
+                {row.map(([x, y, i]) => <Image src={tile(i)} onClick={() => {updateImage(x, y)}} />)}
+            </HStack>
+        </>
         )
     }
 
@@ -50,12 +55,13 @@ function Editor(props) {
     return (
     <>
         <Heading as='h2' size='xl'>Editor</Heading>
+        <Text>{columns}</Text>
+        <Text>{rows}</Text>
         <div id="tileGrid">
             {renderImage()}
         </div>
         <Divider />
         <TileSheet selected={0} />
-        <Button onClick={() => {updateImage(0, 0)}}>Debug</Button>
     </>
     )
 }

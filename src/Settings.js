@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Heading, Select, Divider, Center, Button } from '@chakra-ui/react'
 import { 
     NumberInput,
@@ -11,22 +11,55 @@ import {
     FormControl,
     FormLabel,
 } from '@chakra-ui/react'
+import { useSelector, useDispatch } from 'react-redux'
+import {
+    setCol,
+    setRow,
+    incCol,
+} from './redux/slice/Settings'
 
 
 function Settings() {
-    const [columns, setCols] = useState(20)
-    const [rows, setRows] = useState(20)
-    const [tileWidth, setTileWidth] = useState(16)
-    const [tileHeight, setTileHeight] = useState(16)
+    const columns = useSelector(state => state.settings.columns)
+    const rows = useSelector(state => state.settings.rows)
+    const tileWidth = useSelector(state => state.settings.tileWidth)
+    const tileHeight = useSelector(state => state.settings.tileHeight)
+    const image = useSelector(state => state.settings.inferenceImage)
+    const dispatch = useDispatch()
+
+    function updateCol(n) {
+        // helper function to update redux state
+        // dispatch(setCol(n))
+    }
+
+    function columnControl(value) {
+        return (
+        <>
+            <FormLabel htmlFor={"columns"}>{"Columns"}</FormLabel>
+            <NumberInput
+                defaultValue={value}
+                min={1}
+                maxW={24}
+                onChange={(_, n) => dispatch(setCol(n))}
+            >
+                <NumberInputField />
+            <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+            </NumberInputStepper>
+            </NumberInput>
+        </>
+        )
+    }
 
     return (
     <>
         <Heading as='h2' size='xl'>Settings</Heading>
         <FormControl>
-            { numberField('columns', 'Columns', columns, 1, 24, setCols) }
-            { numberField('rows', 'Rows', rows, 1, 24, setRows) }
+            { columnControl(columns) }
+            { numberField('rows', 'Rows', rows, 1, 24, n => {dispatch(setRow(n))}) }
             <FormLabel htmlFor='inferenceImage'>Inference Image</FormLabel>
-            <Select id='inferenceImage' placeholder=''>
+            <Select id='inferenceImage' placeholder={image}>
             </Select>
             { fixedField('tileWidth', 'Tile Width', tileWidth, 24) }
             { fixedField('tileHeight', 'Tile Height', tileHeight, 24) }
@@ -79,3 +112,4 @@ function fixedField(name, title, value, width) {
     </>
     )
 }
+

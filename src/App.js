@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { ChakraProvider } from '@chakra-ui/react'
 import { Heading, Center, Button } from '@chakra-ui/react'
 import { Menu, MenuList, MenuButton } from '@chakra-ui/react'
 import Home from './Home'
@@ -20,7 +19,6 @@ function App() {
     }
 
     return (
-    <ChakraProvider>
     <div className="App">
       <div>
           <Center>
@@ -38,7 +36,6 @@ function App() {
       </div>
         { page() }
     </div>
-    </ChakraProvider>
 );
 }
 

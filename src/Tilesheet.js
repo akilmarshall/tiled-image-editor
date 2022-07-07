@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
 import { 
     Box,
     HStack,
     Center,
     Image,
 } from '@chakra-ui/react'
+import {
+    useSelector,
+    useDispatch,
+} from 'react-redux'
+import { changeCurrentTile } from './redux/slice/Editor'
+
 
 export const tileset = [
     'https://imgur.com/RnKhzek.png',
@@ -15,8 +20,9 @@ export const tileset = [
     'https://imgur.com/Tjc33Vn.png'
 ]
 
-function TileSheet({selected}) {
-    const [current, setSelected] = useState(selected)
+function TileSheet() {
+    const current = useSelector(state => state.editor.currentTile)
+    const dispatch = useDispatch()
 
     function renderTile(i) {
         const img = tileset[i]
@@ -26,7 +32,7 @@ function TileSheet({selected}) {
                 height={'20px'}
                 width={'20px'}
                 bg={color}
-                onClick={() => setSelected(i)}
+                onClick={() => dispatch(changeCurrentTile(i))}
             >        
                 <Center>
                     <Image id={i} src={img} />

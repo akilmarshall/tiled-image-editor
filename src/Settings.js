@@ -15,12 +15,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
     setCol,
     setRow,
-    incCol,
 } from './redux/slice/Settings'
 
 
 function Settings() {
-    const columns = useSelector(state => state.settings.columns)
+    const columns = useSelector((state) => state.settings.columns)
     const rows = useSelector(state => state.settings.rows)
     const tileWidth = useSelector(state => state.settings.tileWidth)
     const tileHeight = useSelector(state => state.settings.tileHeight)
@@ -29,7 +28,12 @@ function Settings() {
 
     function updateCol(n) {
         // helper function to update redux state
-        // dispatch(setCol(n))
+        dispatch(setCol(n))
+    }
+    
+    function updateRow(n) {
+        // helper function to update redux state
+        dispatch(setRow(n))
     }
 
     function columnControl(value) {
@@ -40,13 +44,25 @@ function Settings() {
                 defaultValue={value}
                 min={1}
                 maxW={24}
-                onChange={(_, n) => dispatch(setCol(n))}
+                onChange={(_, n) => updateCol(n)}
             >
                 <NumberInputField />
-            <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-            </NumberInputStepper>
+            </NumberInput>
+        </>
+        )
+    }
+
+    function rowControl(value) {
+        return (
+        <>
+            <FormLabel htmlFor={"rows"}>{"Rows"}</FormLabel>
+            <NumberInput
+                defaultValue={value}
+                min={1}
+                maxW={24}
+                onChange={(_, n) => updateRow(n)}
+            >
+                <NumberInputField />
             </NumberInput>
         </>
         )
@@ -57,7 +73,7 @@ function Settings() {
         <Heading as='h2' size='xl'>Settings</Heading>
         <FormControl>
             { columnControl(columns) }
-            { numberField('rows', 'Rows', rows, 1, 24, n => {dispatch(setRow(n))}) }
+            { rowControl(rows) }
             <FormLabel htmlFor='inferenceImage'>Inference Image</FormLabel>
             <Select id='inferenceImage' placeholder={image}>
             </Select>
@@ -72,26 +88,6 @@ function Settings() {
     )
 }
 export default Settings;
-
-function numberField(name, title, value, min, width, update) {
-    return (
-    <>
-        <FormLabel htmlFor={name}>{title}</FormLabel>
-        <NumberInput
-            defaultValue={value}
-            min={min}
-            maxW={width}
-            onChange={(_, n) => update(n)}
-        >
-            <NumberInputField />
-        <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-        </NumberInputStepper>
-        </NumberInput>
-    </>
-    )
-}
 
 function fixedField(name, title, value, width) {
     return (

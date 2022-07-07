@@ -3,6 +3,7 @@ import {
     Heading,
     Image,
     HStack,
+    VStack,
     Divider,
     Box, 
     Center,
@@ -10,41 +11,62 @@ import {
     Text,
 } from '@chakra-ui/react'
 import TileSheet, { tileset } from './Tilesheet'
-import { useSelector } from 'react-redux'
+import {
+    useSelector,
+    useDispatch,
+} from 'react-redux'
+import { placeTile, clearImage } from './redux/slice/Editor'
 
 
-function Editor(props) {
-    const {_columns, rows} = props
-
+function Editor() {
     const columns = useSelector(state => state.settings.columns)
+    const rows = useSelector(state => state.settings.rows)
+    const currentTile = useSelector(state => state.editor.currentTile)
+    const tiles = useSelector(state => state.editor.tiles)
+    const dispatch = useDispatch()
 
-    let image = []
-    for (let y = 0; y < rows; y++) {
-        let row = []
-        for (let x = 0; x < columns; x++) {
-            row.push([x, y, 1])  // [x, y, data]
-        }
-        image.push(row)
-    }
 
     function updateImage(x, y) {
         // update image[x][y] to the currently selected tile in the tile sheet
-        // TODO use the currently selected tile instead of always 0
-        // image[x][y] = 0
+        dispatch(placeTile([x, y, currentTile]))
     }
 
+    // TODO: render tiles, unstructured data
+    function buildImage() {
+        let image = []
+        for (let r = 0; r < rows; r++) {
+            let row = []
+            for (let c = 0; c < columns; c++) {
+                row.push([c, r, 0])
+            }
+            image.push(row)
+        }
+        for (let i = 0; i < tiles.length; i++) {
+            const [x, y, t] = tiles[i]
+            image[x][y] = [x, y, t]
+        }
+        return image
+    }
+    function renderTile([x, y, i]) {
+        return (
+            <Image src={tile(i)} onClick={() => {
+                updateImage(y, x)
+            }} />
+        )
+    }
     function renderRow(row) {
         return (
-        <>
-            <HStack spacing='0px'>
-                {row.map(([x, y, i]) => <Image src={tile(i)} onClick={() => {updateImage(x, y)}} />)}
-            </HStack>
-        </>
+        <HStack spacing='0px'>
+            {row.map(renderTile)}
+        </HStack>
         )
     }
 
     function renderImage() {
-        console.log('render')
+        const image = buildImage()
+        // console.log("row 0", image[0])
+        // console.log("row 1", image[1])
+            // {renderRow(image[0])}
         return (
         <>
             {image.map(renderRow)}
@@ -55,18 +77,21 @@ function Editor(props) {
     return (
     <>
         <Heading as='h2' size='xl'>Editor</Heading>
-        <Text>{columns}</Text>
-        <Text>{rows}</Text>
         <div id="tileGrid">
             {renderImage()}
         </div>
         <Divider />
-        <TileSheet selected={0} />
+        <TileSheet selected={currentTile} />
+        <Button onClick={() => { updateImage(0, 0) }}>debug</Button>
+        <Button onClick={() => { dispatch(clearImage()) }}><Text>Clear</Text></Button>
     </>
     )
 }
 export default Editor;
 
 function tile(i) {
-    return tileset[i]
+    if (0 <= i && i < tileset.length) {
+        return tileset[i]
+    }
+    return ""
 }

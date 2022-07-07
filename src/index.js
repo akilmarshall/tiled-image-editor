@@ -9,11 +9,11 @@ import { Provider } from 'react-redux'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ChakraProvider>
-        <Provider store={store} >
+    <Provider store={store}>
+        <ChakraProvider>
             <App />
-        </Provider>
-    </ChakraProvider>
+        </ChakraProvider>
+    </Provider>
   </React.StrictMode>
 );
 
